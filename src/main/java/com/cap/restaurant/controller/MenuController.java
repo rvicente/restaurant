@@ -1,0 +1,55 @@
+package com.cap.restaurant.controller;
+
+import com.cap.restaurant.exception.menu.MenuFieldNotAddedException;
+import com.cap.restaurant.exception.menu.MenuNotFoundException;
+import com.cap.restaurant.exception.menu.UpdateMenuFieldNotAddedException;
+import com.cap.restaurant.model.Menu;
+import com.cap.restaurant.model.MenuResponse;
+import com.cap.restaurant.service.MenuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+
+@RestController
+@RequestMapping("/api/v1")
+public class MenuController {
+
+    @Autowired
+    private MenuService menuService;
+
+//    @GetMapping("/getAllMenus")
+//    public List<Menu> getMenu(){
+//        return menuRepository.findAll();
+//    }
+
+    @GetMapping("/getMenu")
+    public ResponseEntity<MenuResponse> getActiveMenu(){
+        MenuResponse menuResponse = new MenuResponse("OK",new Date().toString(),"200", UUID.randomUUID().toString(), "GetMenu Success",menuService.getActiveMenu());
+        return  new ResponseEntity<>(menuResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/addMenu")
+    public ResponseEntity<MenuResponse> addMenu(@RequestBody Menu menu) throws MenuFieldNotAddedException {
+        Menu menuForAdd = menuService.addMenu(menu);
+        List<Menu> currentList = new ArrayList<>();
+        currentList.add(menuForAdd);
+        MenuResponse menuResponse = new MenuResponse("ok",new Date().toString(),"200", UUID.randomUUID().toString(),"addMenu Success", currentList );
+        return new ResponseEntity<>(menuResponse, HttpStatus.OK);
+
+    }
+
+    @PostMapping("/updateMenu/")
+        public ResponseEntity<MenuResponse> updateMenu(@RequestBody Menu menu) throws UpdateMenuFieldNotAddedException, MenuNotFoundException {
+        Menu menuForUpdate = menuService.updateMenu(menu.getId(),menu);
+        List<Menu> currentList = new ArrayList<>();
+        currentList.add(menuForUpdate);
+        MenuResponse menuResponse = new MenuResponse("ok",new Date().toString(),"200", UUID.randomUUID().toString(),"updateMenu Success", currentList );
+
+        return new ResponseEntity<>(menuResponse, HttpStatus.OK);
+    }
+
+
+}
