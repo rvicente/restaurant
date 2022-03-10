@@ -22,6 +22,8 @@ public class OrderService {
     @Autowired
     private MenuRepository menuRepository;
 
+    private OrderStatus orderStatus;
+
     public Order addOrder(Order order) throws OrderFieldNotAddedException {
 
         Menu currentMenu = menuRepository.findMenuByID(order.getDishID());
@@ -36,11 +38,44 @@ public class OrderService {
     }
 
     public Order getOrder(Integer id) throws OrderNotFoundException {
-        Order currentOrder = orderRepository.findOrderID(id);
-        if( currentOrder == null) {
+        Order dBOrder = orderRepository.findOrderID(id);
+        if( dBOrder == null) {
             throw new OrderNotFoundException("OderService Message");
         }
 
-        return currentOrder;
+        return dBOrder;
+    }
+
+
+    public Order updateOrder(Order order) throws OrderNotFoundException {
+
+        Order dBOrder = orderRepository.findOrderID(order.getId());
+        if (dBOrder == null){
+            throw new OrderNotFoundException("OrderService Message");
+        }
+
+        switch (order.getStatus()){
+            case "1":
+                order.setStatus(orderStatus.ORDER_CREATED.name());
+                break;
+
+            case "2":
+                order.setStatus(orderStatus.PREPARING.name());
+                break;
+
+            case "3":
+                order.setStatus(orderStatus.IN_TRANSIT.name());
+                break;
+
+            case "4":
+                order.setStatus(orderStatus.DELIVERED.name());
+                break;
+
+            case "5":
+                order.setStatus(orderStatus.CANCELED.name());
+                break;
+        }
+
+        return orderRepository.saveAndFlush(order);
     }
 }

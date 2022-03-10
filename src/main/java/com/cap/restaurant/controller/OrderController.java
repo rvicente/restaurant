@@ -44,5 +44,16 @@ public class OrderController {
         return  new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 
+    @PostMapping("/updateOrder")
+    public ResponseEntity<OrderResponse> updateOrder(@RequestBody Order order) throws OrderNotFoundException {
+        Order orderForAdd = orderService.updateOrder(order);
+        List<Order> currentList = new ArrayList<>();
+        currentList.add(order);
+        OrderResponse orderResponse = new OrderResponse("ok",new Date().toString(),"200", UUID.randomUUID().toString(),"UpdateOrder Success", currentList );
+        return  new ResponseEntity<>(orderResponse, HttpStatus.OK);
+    }
+
+
+
 
 }

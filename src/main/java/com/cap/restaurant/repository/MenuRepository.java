@@ -11,7 +11,7 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     @Query(value = "SELECT * FROM menus_rv WHERE available = true", nativeQuery = true)
     List<Menu> findByMenuActive();
 
-    @Query(value = "SELECT * FROM menus_rv WHERE end_date >= CURDATE()", nativeQuery = true)
+    @Query(value = "SELECT * FROM menus_rv WHERE end_date >= CURDATE() AND available = true", nativeQuery = true)
     List<Menu> findActiveMenuByDate();
 
     @Query(value = "SELECT * FROM menus_rv WHERE id = ?", nativeQuery = true)
