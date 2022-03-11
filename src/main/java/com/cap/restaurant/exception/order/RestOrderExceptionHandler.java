@@ -31,7 +31,7 @@ public class RestOrderExceptionHandler {
     }
     @ExceptionHandler(OrderStatusNotValidException.class)
     public ResponseEntity<OrderResponse> orderStatusNotValidException(){
-        OrderResponse orderResponse = new OrderResponse("NOK", new Date().toString(), "500", UUID.randomUUID().toString(), "Method updateOrderStatus error fetch: Please, type a valid number: 1 - ORDER_CREATED, 2 - COOKING, 3 - READY, 4 - IN_TRANSIT, 5 - DELIVERED, 9 - CANCELLED", new ArrayList<>());
+        OrderResponse orderResponse = new OrderResponse("NOK", new Date().toString(), "500", UUID.randomUUID().toString(), "Method updateOrderStatus error fetch: Order update is not possible", new ArrayList<>());
         return ResponseEntity.status(HttpStatus.OK).body(orderResponse);
     }
 }

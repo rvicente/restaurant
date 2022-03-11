@@ -2,6 +2,7 @@ package com.cap.restaurant.controller;
 
 import com.cap.restaurant.exception.order.OrderFieldNotAddedException;
 import com.cap.restaurant.exception.order.OrderNotFoundException;
+import com.cap.restaurant.exception.order.OrderStatusNotValidException;
 import com.cap.restaurant.exception.order.OrderedMenuNotAvailableException;
 import com.cap.restaurant.model.Order;
 import com.cap.restaurant.model.OrderResponse;
@@ -45,10 +46,10 @@ public class OrderController {
     }
 
     @PostMapping("/updateOrder")
-    public ResponseEntity<OrderResponse> updateOrder(@RequestBody Order order) throws OrderNotFoundException {
-        Order orderForAdd = orderService.updateOrder(order);
+    public ResponseEntity<OrderResponse> updateOrder(@RequestBody Order order) throws OrderNotFoundException, OrderStatusNotValidException {
+        Order orderForUpdate = orderService.updateOrder(order);
         List<Order> currentList = new ArrayList<>();
-        currentList.add(order);
+        currentList.add(orderForUpdate);
         OrderResponse orderResponse = new OrderResponse("ok",new Date().toString(),"200", UUID.randomUUID().toString(),"UpdateOrder Success", currentList );
         return  new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }

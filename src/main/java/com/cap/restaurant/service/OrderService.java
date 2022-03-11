@@ -2,6 +2,7 @@ package com.cap.restaurant.service;
 
 import com.cap.restaurant.exception.order.OrderFieldNotAddedException;
 import com.cap.restaurant.exception.order.OrderNotFoundException;
+import com.cap.restaurant.exception.order.OrderStatusNotValidException;
 import com.cap.restaurant.model.Menu;
 import com.cap.restaurant.model.Order;
 import com.cap.restaurant.model.OrderResponse;
@@ -48,36 +49,41 @@ public class OrderService {
     }
 
 
-    public Order updateOrder(Order order) throws OrderNotFoundException {
-
+    public Order updateOrder(Order order) throws OrderNotFoundException, OrderStatusNotValidException {
         Order dBOrder = orderRepository.findOrderID(order.getId());
-        if (dBOrder == null){
+
+        if (dBOrder == null) {
             throw new OrderNotFoundException("OrderService Message");
         }
 
-        switch (order.getStatus()){
+
+        if(dBOrder.getStatus().equals("CANCELlED")){
+            throw new OrderStatusNotValidException("OrderService Message");
+        }
+        switch (order.getStatus()) {
             case "1":
-                order.setStatus(orderStatus.ORDER_CREATED.name());
+                dBOrder.setStatus(orderStatus.ORDER_CREATED.name());
                 break;
 
             case "2":
-                order.setStatus(orderStatus.PREPARING.name());
+                dBOrder.setStatus(orderStatus.PREPARING.name());
                 break;
 
             case "3":
-                order.setStatus(orderStatus.IN_TRANSIT.name());
+                dBOrder.setStatus(orderStatus.IN_TRANSIT.name());
                 break;
 
             case "4":
-                order.setStatus(orderStatus.DELIVERED.name());
+                dBOrder.setStatus(orderStatus.DELIVERED.name());
                 break;
 
             case "5":
-                order.setStatus(orderStatus.CANCELED.name());
+                dBOrder.setStatus(orderStatus.CANCELlED.name());
                 break;
         }
-        order.setAlterationDate(new Date());
 
-        return orderRepository.saveAndFlush(order);
+        dBOrder.setAlterationDate(new Date());
+
+        return orderRepository.saveAndFlush(dBOrder);
     }
 }

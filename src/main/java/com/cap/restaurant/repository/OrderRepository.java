@@ -10,5 +10,5 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query(value = "SELECT * FROM orders_rv WHERE id = ?", nativeQuery = true)
-    Order findOrderID(Integer dishID);
+    Order findOrderID(Integer id);
 }
