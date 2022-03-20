@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MenuService {
@@ -20,16 +21,13 @@ public class MenuService {
     public List<Menu> getActiveMenu() {
         List<Menu> activeMenuByDate = menuRepository.findActiveMenuByDate();
         List<Menu> activeMenu = new ArrayList<>();
-        for (Menu menus : activeMenuByDate){
-            if (menus.getAvailable()){
-                activeMenu.add(menus);
-            }
-        }
-        return activeMenu;
+
+
+        return activeMenuByDate;
     }
 
     public Menu addMenu(Menu menu) throws MenuFieldNotAddedException {
-        if (menu.getDishName() == null || menu.getAmount() == null || menu.getAvailable() == null || menu.getEndDate() == null || menu.getStartDate() ==null){
+        if (menu.getDishName() == null || menu.getAmount() == null || menu.getAvailable() == null || menu.getEndDate() == null || menu.getStartDate() ==null || menu.getStock() == null){
             throw new MenuFieldNotAddedException("MenuService Message");
         }
         return menuRepository.saveAndFlush(menu);
@@ -50,6 +48,7 @@ public class MenuService {
             menuForUpdate.setAmount(menu.getAmount());
             menuForUpdate.setStartDate(menu.getStartDate());
             menuForUpdate.setEndDate(menu.getEndDate());
+            menuForUpdate.setStock(menu.getStock());
             menuForUpdate.setAvailable(menu.getAvailable());
         }
         return menuRepository.saveAndFlush(menu);

@@ -3,17 +3,16 @@ package com.cap.restaurant.service;
 import com.cap.restaurant.exception.order.OrderFieldNotAddedException;
 import com.cap.restaurant.exception.order.OrderNotFoundException;
 import com.cap.restaurant.exception.order.OrderStatusNotValidException;
+import com.cap.restaurant.exception.order.OrderedMenuNotAvailableException;
 import com.cap.restaurant.model.Menu;
 import com.cap.restaurant.model.Order;
-import com.cap.restaurant.model.OrderResponse;
 import com.cap.restaurant.repository.MenuRepository;
 import com.cap.restaurant.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -26,7 +25,7 @@ public class OrderService {
 
     private OrderStatus orderStatus;
 
-    public Order addOrder(Order order) throws OrderFieldNotAddedException {
+    public Order addOrder(Order order) throws OrderFieldNotAddedException, OrderedMenuNotAvailableException {
 
         Menu currentMenu = menuRepository.findMenuByID(order.getDishID());
         System.out.println(order.getDishID() + " order id" + "    menu" + currentMenu);
@@ -34,6 +33,14 @@ public class OrderService {
             throw new OrderFieldNotAddedException("OrderService Message");
         }
 
+        currentMenu.setStock(currentMenu.getStock()- order.getQuantity());
+        if (order.getQuantity() < 0 || currentMenu.getStock() < 0) {
+            throw new OrderedMenuNotAvailableException("OrderService Message");
+        }
+
+        currentMenu.setStock(currentMenu.getStock());
+        menuRepository.saveAndFlush(currentMenu);
+        order.setTransactionID(UUID.randomUUID().toString());
         order.setAmount(currentMenu.getAmount() * order.getQuantity());
 
         return orderRepository.saveAndFlush(order);
@@ -79,6 +86,11 @@ public class OrderService {
 
             case "5":
                 dBOrder.setStatus(orderStatus.CANCELlED.name());
+                if (!dBOrder.getStatus().equals("DELIVERED")){
+                    Menu currentMenu = menuRepository.findMenuByID(dBOrder.getDishID());
+                    currentMenu.setStock(currentMenu.getStock() + dBOrder.getQuantity());
+                    menuRepository.saveAndFlush(currentMenu);
+                }
                 break;
         }
 

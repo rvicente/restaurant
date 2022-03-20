@@ -36,11 +36,22 @@ public class Order {
     @Column(name = "alteration_date", nullable = false)
     private Date alterationDate;
 
+    @Column(name = "transaction_id", nullable = false)
+    private String transactionID;
+
     @PrePersist
     public void onCreate(){
         status = "ORDER_CREATED";
         creationDate = new Date();
         alterationDate = new Date();
+    }
+
+    public String getTransactionID() {
+        return transactionID;
+    }
+
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
     }
 
     public Date getAlterationDate() {

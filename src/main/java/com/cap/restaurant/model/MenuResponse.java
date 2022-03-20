@@ -1,6 +1,7 @@
 package com.cap.restaurant.model;
 
 import java.util.List;
+import java.util.Optional;
 
 public class MenuResponse {
 
@@ -11,13 +12,15 @@ public class MenuResponse {
     private String msg;
     private List<Menu> resValues;
 
+    public MenuResponse(){}
+
     public MenuResponse(String status, String sentOn, String statusCode, String transactionID, String msg, List<Menu> resValues) {
         this.status = status;
         this.sentOn = sentOn;
         this.statusCode = statusCode;
         this.transactionID = transactionID;
         this.msg = msg;
-        this.resValues = resValues;
+        this.resValues =resValues;
     }
 
     public String getStatus() {

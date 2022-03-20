@@ -27,6 +27,9 @@ public class Menu {
     @Column(name = "end_date", nullable = false)
     private Date endDate;
 
+    @Column(name = "stock", nullable = false)
+    private Integer stock;
+
     @Column(name = "available", nullable = false)
     private Boolean available = false;
 
@@ -36,6 +39,14 @@ public class Menu {
 
     public void setAvailable(Boolean available) {
         this.available = available;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
     public Date getEndDate() {

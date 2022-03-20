@@ -27,7 +27,26 @@ public class MenuController {
 
     @GetMapping("/getMenu")
     public ResponseEntity<MenuResponse> getActiveMenu(){
-        MenuResponse menuResponse = new MenuResponse("OK",new Date().toString(),"200", UUID.randomUUID().toString(), "GetMenu Success",menuService.getActiveMenu());
+        MenuResponse menuResponse = new MenuResponse();
+        menuResponse.setSentOn(new Date().toString());
+        menuResponse.setTransactionID(UUID.randomUUID().toString());
+        try{
+            //menuResponse = new MenuResponse("OK",new Date().toString(),"200", UUID.randomUUID().toString(), "GetMenu Success",menuService.getActiveMenu());
+            List<Menu> activeMenuList = menuService.getActiveMenu();
+
+            menuResponse.setStatus("ok");
+            if (!activeMenuList.isEmpty()) {
+                menuResponse.setMsg("getMenu success");
+                menuResponse.setResValues(activeMenuList);
+            }else{
+                menuResponse.setMsg("getMenu: No list to show");
+                menuResponse.setResValues(activeMenuList);
+            }
+        }catch (Exception e){
+            menuResponse.setStatus("NOK");
+            menuResponse.setMsg("Error: " + e.getMessage());
+        }
+        //MenuResponse menuResponse = new MenuResponse("OK",new Date().toString(),"200", UUID.randomUUID().toString(), "GetMenu Success",menuService.getActiveMenu());
         return  new ResponseEntity<>(menuResponse, HttpStatus.OK);
     }
 

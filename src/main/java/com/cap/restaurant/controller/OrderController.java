@@ -27,30 +27,31 @@ public class OrderController {
     private OrderService orderService;
 
    @PostMapping("/addOrder")
-    public ResponseEntity<OrderResponse> addOrder(@RequestBody Order order) throws OrderFieldNotAddedException {
-        Order orderForAdd = orderService.addOrder(order);
+    public ResponseEntity<OrderResponse> addOrder(@RequestBody Order order) throws OrderFieldNotAddedException, OrderedMenuNotAvailableException {
+       Order orderForAdd = orderService.addOrder(order);
         List<Order> currentList = new ArrayList<>();
         currentList.add(order);
-        OrderResponse orderResponse = new OrderResponse("ok",new Date().toString(),"200", UUID.randomUUID().toString(),"addOrder Success", currentList );
+        OrderResponse orderResponse = new OrderResponse("ok",new Date().toString(),"200", orderForAdd.getTransactionID(),"addOrder Success", currentList );
         return  new ResponseEntity<>(orderResponse, HttpStatus.OK);
    }
 
     // TODO: 10/03/2022 receber um integer com id?? 
     @PostMapping("/getOrder")
     public ResponseEntity<OrderResponse> getOrder(@RequestBody Order order) throws OrderNotFoundException {
-        Order orderForAdd = orderService.getOrder(order.getId());
+        Order orderForGet = orderService.getOrder(order.getId());
         List<Order> currentList = new ArrayList<>();
-        currentList.add(orderForAdd);
-        OrderResponse orderResponse = new OrderResponse("ok",new Date().toString(),"200", UUID.randomUUID().toString(),"getOrder Success", currentList );
+        currentList.add(orderForGet);
+        OrderResponse orderResponse = new OrderResponse("ok",new Date().toString(),"200", orderForGet.getTransactionID(),"getOrder Success", currentList );
         return  new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 
     @PostMapping("/updateOrder")
     public ResponseEntity<OrderResponse> updateOrder(@RequestBody Order order) throws OrderNotFoundException, OrderStatusNotValidException {
+        String transactionID = UUID.randomUUID().toString();
         Order orderForUpdate = orderService.updateOrder(order);
         List<Order> currentList = new ArrayList<>();
         currentList.add(orderForUpdate);
-        OrderResponse orderResponse = new OrderResponse("ok",new Date().toString(),"200", UUID.randomUUID().toString(),"UpdateOrder Success", currentList );
+        OrderResponse orderResponse = new OrderResponse("ok",new Date().toString(),"200", orderForUpdate.getTransactionID(),"UpdateOrder Success", currentList );
         return  new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 
