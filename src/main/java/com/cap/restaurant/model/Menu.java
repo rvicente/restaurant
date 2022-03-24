@@ -32,6 +32,32 @@ public class Menu {
     @Column(name = "available", nullable = false)
     private Boolean available = false;
 
+    @Column(name = "image_link")
+    private String imageLink;
+
+    public Menu(){
+
+    }
+
+    public Menu(Integer id, String dishName, Double amount, Date startDate, Date endDate, Integer stock, Boolean available, String imageLink) {
+        this.id = id;
+        this.dishName = dishName;
+        this.amount = amount;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.stock = stock;
+        this.available = available;
+        this.imageLink = imageLink;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
+
     public Boolean getAvailable() {
         return available;
     }

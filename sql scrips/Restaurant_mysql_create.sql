@@ -25,6 +25,9 @@ ALTER TABLE menus_rv ADD COLUMN stock int NOT NULL AFTER end_date;
 
 ALTER TABLE orders_rv ADD COLUMN transaction_id varchar(255) NOT NULL AFTER amount;
 
+ALTER TABLE menus_rv ADD COLUMN image_link varchar(255) AFTER available;
+
+
 
 
 
