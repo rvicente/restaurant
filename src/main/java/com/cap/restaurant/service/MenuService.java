@@ -26,8 +26,16 @@ public class MenuService {
         return activeMenuByDate;
     }
 
+    public Menu getMenuById(int id) throws MenuNotFoundException {
+        Menu menuById = menuRepository.findMenuByID(id);
+        if(menuById == null){
+            throw new MenuNotFoundException("MenuService Message");
+        }
+        return menuById;
+    }
+
     public Menu addMenu(Menu menu) throws MenuFieldNotAddedException {
-        if (menu.getDishName() == null || menu.getAmount() == null || menu.getAvailable() == null || menu.getEndDate() == null || menu.getStartDate() ==null || menu.getStock() == null){
+        if (menu.getDishName() == null || menu.getAmount() == null || menu.getAvailable() == null || menu.getEndDate() == null || menu.getStartDate() ==null || menu.getStock() == null) {
             throw new MenuFieldNotAddedException("MenuService Message");
         }
         return menuRepository.saveAndFlush(menu);
@@ -52,5 +60,13 @@ public class MenuService {
             menuForUpdate.setAvailable(menu.getAvailable());
         }
         return menuRepository.saveAndFlush(menu);
+    }
+
+    public List<Menu> allMenus(){
+        return menuRepository.findAll();
+    }
+
+    public void deleteMenu(Integer id){
+        menuRepository.deleteById(id);
     }
 }

@@ -39,17 +39,6 @@ public class Menu {
 
     }
 
-    public Menu(Integer id, String dishName, Double amount, Date startDate, Date endDate, Integer stock, Boolean available, String imageLink) {
-        this.id = id;
-        this.dishName = dishName;
-        this.amount = amount;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.stock = stock;
-        this.available = available;
-        this.imageLink = imageLink;
-    }
-
     public String getImageLink() {
         return imageLink;
     }
@@ -112,5 +101,19 @@ public class Menu {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "id=" + id +
+                ", dishName='" + dishName + '\'' +
+                ", amount=" + amount +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", stock=" + stock +
+                ", available=" + available +
+                ", imageLink='" + imageLink + '\'' +
+                '}';
     }
 }

@@ -20,10 +20,13 @@ public class MenuController {
     @Autowired
     private MenuService menuService;
 
-//    @GetMapping("/getAllMenus")
-//    public List<Menu> getMenu(){
-//        return menuRepository.findAll();
-//    }
+    @CrossOrigin
+    @GetMapping("/getAllMenus")
+    public List<Menu> getMenu(){
+       return menuService.allMenus();
+    }
+
+
 
     @GetMapping("/getMenu")
     public ResponseEntity<MenuResponse> getActiveMenu(){
@@ -50,6 +53,20 @@ public class MenuController {
         return  new ResponseEntity<>(menuResponse, HttpStatus.OK);
     }
 
+    @CrossOrigin
+    @GetMapping("/getMenuById/{id}")
+    public ResponseEntity<MenuResponse> getMenuById (@PathVariable int id) throws MenuNotFoundException {
+        Menu menuById = menuService.getMenuById(id);
+        List<Menu> currentList = new ArrayList<>();
+        currentList.add(menuById);
+        MenuResponse menuResponse = new MenuResponse("ok",new Date().toString(),"200", UUID.randomUUID().toString(),"updateMenu Success", currentList );
+
+        System.out.println(menuById.toString());
+
+        return new ResponseEntity<>(menuResponse, HttpStatus.OK);
+    }
+
+    @CrossOrigin
     @PostMapping("/addMenu")
     public ResponseEntity<MenuResponse> addMenu(@RequestBody Menu menu) throws MenuFieldNotAddedException {
         Menu menuForAdd = menuService.addMenu(menu);
@@ -60,14 +77,24 @@ public class MenuController {
 
     }
 
-    @PostMapping("/updateMenu/")
+    @PostMapping("/updateMenu")
         public ResponseEntity<MenuResponse> updateMenu(@RequestBody Menu menu) throws UpdateMenuFieldNotAddedException, MenuNotFoundException {
         Menu menuForUpdate = menuService.updateMenu(menu.getId(),menu);
         List<Menu> currentList = new ArrayList<>();
         currentList.add(menuForUpdate);
         MenuResponse menuResponse = new MenuResponse("ok",new Date().toString(),"200", UUID.randomUUID().toString(),"updateMenu Success", currentList );
-
         return new ResponseEntity<>(menuResponse, HttpStatus.OK);
+    }
+
+
+
+    @DeleteMapping("/deleteMenu/{id}")
+    public ResponseEntity<MenuResponse> deleteMenu(@PathVariable int id) {
+        menuService.deleteMenu(id);
+        List<Menu> currentList = new ArrayList<>();
+        MenuResponse menuResponse = new MenuResponse("ok",new Date().toString(),"200", UUID.randomUUID().toString(),"updateMenu Success", currentList );
+        return new ResponseEntity<>(menuResponse, HttpStatus.OK);
+
     }
 
 
